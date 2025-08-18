@@ -139,7 +139,7 @@ export function Settings({
                     const isDayOff = daysOff.includes(day);
                     return <button key={`day-${day}`} type="button" disabled={isWeekend} onClick={() => !isWeekend && handleDayToggle(day)} className={`
                             h-10 rounded-lg flex items-center justify-center text-sm
-                            ${isWeekend ? 'bg-gray-100 text-gray-400' : isDayOff ? 'bg-lime-100 text-lime-700 font-medium border-2 border-lime-500' : 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200'}
+                            ${isWeekend ? 'bg-gray-100 text-gray-400' : isDayOff ? 'bg-red-100 text-red-700 font-medium border-2 border-red-500' : 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200'}
                           `}>
                           {day}
                         </button>;

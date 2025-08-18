@@ -24,7 +24,7 @@ export function Navigation({
 
   return (
     <header className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-white/75 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/50 px-6 py-3">
+      <div className="bg-white/35 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/50 px-4 py-3">
         <div className="flex items-center space-x-6 flex-nowrap">
           {/* Logo */}
           <div className="flex items-center">
@@ -82,7 +82,7 @@ export function Navigation({
 
           {/* Profile & Sign Out */}
 <button 
-  className="flex items-center px-3 py-2 rounded-lg bg-gray-900 hover:bg-black text-white transition 
+  className="flex items-center px-4 py-3 rounded-lg bg-gray-900 hover:bg-black text-white transition 
              text-sm font-medium whitespace-nowrap shrink-0 leading-none"
 >
   <LogOutIcon size={14} className="mr-2 shrink-0" />
