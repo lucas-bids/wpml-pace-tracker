@@ -26,6 +26,11 @@ export function MonthStatsCard({
   currentMonth,
   monthSettings
 }: MonthStatsCardProps) {
+  const formatMonthTitle = (date: Date) => {
+    const monthName = date.toLocaleDateString('en-US', { month: 'long' });
+    return `${monthName} Stats`;
+  };
+
   // Helper functions for calculations
   const getWorkdayCount = (month: number, year: number, daysOff: number[] = []) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -111,7 +116,7 @@ export function MonthStatsCard({
     value: `${monthSettings.extraTaskHours}h`,
     color: 'bg-green-500'
   }];
-  return <Card title="Month Stats">
+  return <Card title={formatMonthTitle(currentMonth)}>
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-500">Progress</span>
