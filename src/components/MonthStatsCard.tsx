@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Card } from './ui/Card';
 import { TrendingUpIcon, TrendingDownIcon, TargetIcon } from 'lucide-react';
 
@@ -66,26 +66,28 @@ export function MonthStatsCard({
     const ticketDate = new Date(ticket.date);
     return ticketDate.getMonth() === month && ticketDate.getFullYear() === year;
   }).length;
+  
+  // Calculate tickets for today specifically
+  const today = new Date();
+  const ticketsToday = tickets.filter(ticket => {
+    const ticketDate = new Date(ticket.date);
+    return ticketDate.toDateString() === today.toDateString();
+  }).length;
+  
   const dailyAverage = workedDaysSoFar > 0 ? (ticketsThisMonth / workedDaysSoFar).toFixed(1) : 0;
   const monthlyGoal = monthSettings.dailyGoal * totalWorkdays;
   const remainingTickets = Math.max(0, monthlyGoal - ticketsThisMonth);
-  const remainingWorkdays = totalWorkdays - workedDaysSoFar;
-  const neededPerDay = remainingWorkdays > 0 ? (remainingTickets / remainingWorkdays).toFixed(1) : 0;
   // Performance indicator  
   const isOnTrack = parseFloat(dailyAverage.toString()) >= monthSettings.dailyGoal;
-  // Extra hours converted to day equivalents (assuming 8-hour workday)
-  const adjustedDayEquivalents = (monthSettings.extraTaskHours / 8).toFixed(1);
+  // Days off count for the month
+  const daysOffCount = monthSettings.daysOff.length;
   // Progress percentage
   const progressPercentage = Math.min(100, Math.round(ticketsThisMonth / monthlyGoal * 100));
   const stats = [{
-    label: 'Total tickets',
-    value: ticketsThisMonth,
+    label: 'Tickets today',
+    value: ticketsToday,
     highlight: true,
     color: 'bg-blue-500'
-  }, {
-    label: 'Worked days',
-    value: workedDaysSoFar,
-    color: 'bg-gray-500'
   }, {
     label: 'Daily average',
     value: dailyAverage,
@@ -97,14 +99,17 @@ export function MonthStatsCard({
     icon: <TargetIcon size={16} className="text-blue-500" />,
     color: 'bg-blue-500'
   }, {
-    label: 'Monthly goal',
-    value: monthlyGoal,
-    highlight: true,
-    color: 'bg-indigo-500'
-  }, {
     label: 'Remaining',
     value: remainingTickets,
     color: 'bg-amber-500'
+  }, {
+    label: 'Days off',
+    value: daysOffCount,
+    color: 'bg-gray-500'
+  }, {
+    label: 'Hours of extra tasks',
+    value: `${monthSettings.extraTaskHours}h`,
+    color: 'bg-green-500'
   }];
   return <Card title="Month Stats">
       <div className="mb-6">
@@ -131,22 +136,6 @@ export function MonthStatsCard({
               {stat.label}
             </div>
           </div>)}
-      </div>
-      <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium text-blue-800">Extra tasks</h4>
-            <p className="text-sm text-blue-600 mt-1">
-              {monthSettings.extraTaskHours} hours = {adjustedDayEquivalents}{' '}
-              days
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-            <span className="text-green-600 font-bold text-sm">
-              +{adjustedDayEquivalents}
-            </span>
-          </div>
-        </div>
       </div>
     </Card>;
 }

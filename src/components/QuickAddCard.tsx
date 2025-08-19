@@ -35,7 +35,7 @@ export function QuickAddCard({
           <label htmlFor="ticket-type" className="block text-sm font-medium text-gray-300 mb-2">
             Ticket Type
           </label>
-          <select id="ticket-type" value={type} onChange={e => setType(e.target.value)} className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent appearance-none text-white">
+          <select id="ticket-type" value={type} onChange={e => setType(e.target.value as 'Forum' | 'Chat')} className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent appearance-none text-white">
             <option value="Forum">Forum</option>
             <option value="Chat">Chat</option>
           </select>
