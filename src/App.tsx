@@ -64,7 +64,7 @@ export function App({
       return newDate;
     });
   };
-  const handleAddTicket = (url: string, type: 'Forum' | 'Chat') => {
+  const handleAddTicket = (url: string, type: 'Forum' | 'Chat', date: Date) => {
     // Extract title from URL (simplified for demo)
     const urlParts = url.split('/');
     const slug = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
@@ -73,7 +73,7 @@ export function App({
       id: Date.now().toString(),
       title,
       type,
-      date: new Date()
+      date
     };
     setTickets(prev => [newTicket, ...prev]);
   };
