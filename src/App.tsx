@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Navigation } from './components/Navigation';
 import { QuickAddCard } from './components/QuickAddCard';
 import { MonthStatsCard } from './components/MonthStatsCard';
@@ -21,67 +20,30 @@ interface MonthSettings {
 
 interface AppProps {
   settingsPage?: boolean;
+  currentMonth: Date;
+  onPrevMonth: () => void;
+  onNextMonth: () => void;
+  tickets: Ticket[];
+  onAddTicket: (url: string, type: 'Forum' | 'Chat', date: Date) => void;
+  onDeleteTicket: (id: string) => void;
+  monthSettings: MonthSettings;
+  updateMonthSettings: (settings: MonthSettings) => void;
 }
 export function App({
-  settingsPage = false
+  settingsPage = false,
+  currentMonth,
+  onPrevMonth,
+  onNextMonth,
+  tickets,
+  onAddTicket,
+  onDeleteTicket,
+  monthSettings,
+  updateMonthSettings
 }: AppProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
   const navigate = useNavigate();
   const location = useLocation();
-  // Sample data for demonstration
-  const [tickets, setTickets] = useState<Ticket[]>([{
-    id: '1',
-    title: 'Plugin activation issue',
-    type: 'Forum',
-    date: new Date()
-  }, {
-    id: '2',
-    title: 'Translation not working',
-    type: 'Chat',
-    date: new Date()
-  }, {
-    id: '3',
-    title: 'License renewal question',
-    type: 'Forum',
-    date: new Date()
-  }]);
-  const [monthSettings, setMonthSettings] = useState<MonthSettings>({
-    dailyGoal: 8,
-    extraTaskHours: 5,
-    daysOff: [10, 11, 24] // Example days off in the month
-  });
-  const handlePrevMonth = () => {
-    setCurrentMonth(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() - 1);
-      return newDate;
-    });
-  };
-  const handleNextMonth = () => {
-    setCurrentMonth(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() + 1);
-      return newDate;
-    });
-  };
-  const handleAddTicket = (url: string, type: 'Forum' | 'Chat', date: Date) => {
-    // Extract title from URL (simplified for demo)
-    const urlParts = url.split('/');
-    const slug = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
-    const title = slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    const newTicket = {
-      id: Date.now().toString(),
-      title,
-      type,
-      date
-    };
-    setTickets(prev => [newTicket, ...prev]);
-  };
-  const handleDeleteTicket = (id: string) => {
-    setTickets(prev => prev.filter(ticket => ticket.id !== id));
-  };
-  const updateMonthSettings = (newSettings: MonthSettings) => {
-    setMonthSettings(newSettings);
+  const handleUpdateMonthSettings = (newSettings: MonthSettings) => {
+    updateMonthSettings(newSettings);
     if (location.pathname === '/settings') {
       navigate('/');
     }
@@ -89,13 +51,13 @@ export function App({
   // If on settings page, render the Settings component
   if (settingsPage) {
     return <div className="min-h-screen w-full bg-[#f8f9fc] text-gray-800">
-        <Navigation currentMonth={currentMonth} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
-        <Settings settings={monthSettings} onUpdateSettings={updateMonthSettings} currentMonth={currentMonth} />
+        <Navigation currentMonth={currentMonth} onPrevMonth={onPrevMonth} onNextMonth={onNextMonth} />
+        <Settings settings={monthSettings} onUpdateSettings={handleUpdateMonthSettings} currentMonth={currentMonth} />
       </div>;
   }
   // Otherwise render the main dashboard
   return <div className="min-h-screen w-full bg-[#f8f9fc] text-gray-800">
-      <Navigation currentMonth={currentMonth} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
+      <Navigation currentMonth={currentMonth} onPrevMonth={onPrevMonth} onNextMonth={onNextMonth} />
       <main className="flex-1 px-6 py-8 pt-32">
         <div className="max-w-7xl mx-auto">
           <header className="mb-8">
@@ -107,14 +69,14 @@ export function App({
             </p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <QuickAddCard onAddTicket={handleAddTicket} />
+            <QuickAddCard onAddTicket={onAddTicket} />
             <MonthStatsCard tickets={tickets} currentMonth={currentMonth} monthSettings={monthSettings} />
             <div className="lg:col-span-2">
               <DayTicketsCard tickets={tickets.filter(ticket => {
               const today = new Date();
               const ticketDate = new Date(ticket.date);
               return ticketDate.toDateString() === today.toDateString();
-            })} onDeleteTicket={handleDeleteTicket} />
+            })} onDeleteTicket={onDeleteTicket} />
             </div>
           </div>
         </div>
